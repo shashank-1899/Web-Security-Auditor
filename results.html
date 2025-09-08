@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scan Results</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .severity-High { color: red; font-weight: bold; }
+        .severity-Medium { color: orange; }
+        .severity-Low { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Scan Results for: {{ target }}</h1>
+
+    <h2>Summary</h2>
+    <p>Found a total of <strong>{{ findings|length }}</strong> potential issues.</p>
+
+    <h2>Detailed Findings</h2>
+    {% if findings %}
+        <table>
+            <tr>
+                <th>Type</th>
+                <th>URL / Details</th>
+                <th>Severity</th>
+            </tr>
+            {% for finding in findings %}
+            <tr>
+                <td>{{ finding.type }}</td>
+                <td>
+                    {% if finding.url %}
+                        <code>{{ finding.url }}</code>
+                    {% else %}
+                        {{ finding.details }}
+                    {% endif %}
+                </td>
+                <td class="severity-{{ finding.severity }}">{{ finding.severity }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No vulnerabilities found.</p>
+    {% endif %}
+
+    <br>
+    <a href="/report"><button>Download PDF Report</button></a>
+    <a href="/">Scan Another Site</a>
+</body>
+</html>
